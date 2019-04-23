@@ -3,7 +3,7 @@
 using BinaryBuilder
 
 name = "Gperf"
-version = v"3.1.0-0"
+version = v"3.1.0"
 
 # Collection of sources required to build Gperf
 sources = [
