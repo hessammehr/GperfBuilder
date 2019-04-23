@@ -1,0 +1,39 @@
+language: julia
+os:
+  - linux
+julia:
+  - 1.0
+notifications:
+  email: false
+git:
+  depth: 99999999
+cache:
+  timeout: 1000
+  directories:
+    - downloads
+env:
+  global:
+    - BINARYBUILDER_DOWNLOADS_CACHE=downloads
+    - BINARYBUILDER_AUTOMATIC_APPLE=false
+sudo: required
+
+# Before anything else, get the latest versions of things
+before_script:
+  - julia -e 'using Pkg; pkg"add BinaryProvider"; pkg"add BinaryBuilder#master"; Pkg.build()'
+
+script:
+  - julia build_tarballs.jl
+
+
+deploy:
+    provider: releases
+    api_key:
+        # Note; this api_key is only valid for hessammehr/GperfBuilder; you need
+        # to make your own: https://docs.travis-ci.com/user/deployment/releases/
+        secure: 04dohAXPZ6QhZ8CZrMUfNvHBGBc6Tx8zZzpiGHAFCw63sVGF//KKYgN4rZc730OGaySAt1NoXR/9euR0JUuS7b/6bRb3wFYvpIrVDb0lHdcryyrW6F1ouQbLrFusMrXyPVNxdPZ0cGDogzP1Gd6F4oT9hv3zYPp4DY5aWdx0Tdc6elYLKcuH01KHN4/+nKsyitBwmt80I5EGBTLkI8fSBWQ00wzLakwsT9luhuRwDOW5usRRFkgV372A1aCneBoQKysibrBs4xOuFshjt1oQQ7gLLDooPwDrX+fZaqVtnGUtX0tDTJrgJQyiQqvnEdAO46aqtN5NExZMt7kPxtf0o5wMKGApFmGgqVoxzDyavEtrMvpj5kWWaU7mVq3N7nZRLWkCdbFf0bjWoZXCMPAVsBVxH/fI4nXgo0EZvrFkIazIcgQ8Vz1+NugSqU7l1J1vCh34n7VcLA84EFp0YiSCwdINJ4Pyc4D9oeUNSfsoDyy8vAec102SJbptzVSoN5RRxffMLUv6O7WK2cTZS5XA0W2I40clLbD+YeCnhm04UdFimhY12PZLyL2oO5fcdyEdWFaRKm7t+/cZ9+46oQjbvlVxG0q3Apyi67vUgCfchKzJP6TQuflL5owzQ3d3TMg+SkwC6EGgQlatAsam2rbAppebrO2DbL3uLYy/94Sgifw=
+    file_glob: true
+    file: products/*
+    skip_cleanup: true
+    on:
+        repo: hessammehr/GperfBuilder
+        tags: true
